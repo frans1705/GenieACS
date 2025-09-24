@@ -70,7 +70,6 @@ if !  systemctl is-active --quiet mongod; then
     systemctl start mongod.service
     systemctl start mongod
     systemctl enable mongod
-    mongo --eval 'db.runCommand({ connectionStatus: 1 })'
 	ps --no-headers -o comm 1
 	
     echo -e "${GREEN}================== Sukses MongoDB ==================${NC}"
