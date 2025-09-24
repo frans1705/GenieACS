@@ -62,15 +62,17 @@ fi
 #MongoDB
 if !  systemctl is-active --quiet mongod; then
     echo -e "${GREEN}================== Menginstall MongoDB ==================${NC}"
-    curl -fsSL https://www.mongodb.org/static/pgp/server-4.4.asc | apt-key add -
-    apt-key list
-    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.4.list
-    apt update
-    apt install mongodb-org -y
+    apt-get install gnupg curl
+	curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor
+    echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+	apt-get update
+    apt-get install -y mongodb-org
     systemctl start mongod.service
     systemctl start mongod
     systemctl enable mongod
     mongo --eval 'db.runCommand({ connectionStatus: 1 })'
+	ps --no-headers -o comm 1
+	mongosh
     echo -e "${GREEN}================== Sukses MongoDB ==================${NC}"
 else
     echo -e "${GREEN}============================================================================${NC}"
