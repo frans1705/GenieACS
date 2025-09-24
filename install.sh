@@ -38,14 +38,16 @@ apt install -y nodejs
 node -v
 
 echo "Menginstal MongoDB..."
-curl -fsSL https://www.mongodb.org/static/pgp/server-4.4.asc | apt-key add -
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.4.list
-apt update
-apt install -y mongodb-org
+apt-get install gnupg curl
+curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+apt-get update
+apt-get install -y mongodb-org
 systemctl start mongod.service
 systemctl enable mongod
 
 mongo --eval 'db.runCommand({ connectionStatus: 1 })'
+ps --no-headers -o comm 1
 
 #GenieACS
 if !  systemctl is-active --quiet genieacs-{cwmp,fs,ui,nbi}; then
