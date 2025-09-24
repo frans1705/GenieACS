@@ -92,9 +92,11 @@ GENIEACS_NBI_ACCESS_LOG_FILE=/var/log/genieacs/genieacs-nbi-access.log
 GENIEACS_FS_ACCESS_LOG_FILE=/var/log/genieacs/genieacs-fs-access.log
 GENIEACS_UI_ACCESS_LOG_FILE=/var/log/genieacs/genieacs-ui-access.log
 GENIEACS_DEBUG_FILE=/var/log/genieacs/genieacs-debug.yaml
+NODE_OPTIONS=--enable-source-maps
 GENIEACS_EXT_DIR=/opt/genieacs/ext
 GENIEACS_UI_JWT_SECRET=secret
 EOF
+node -e "console.log(\"GENIEACS_UI_JWT_SECRET=\" + require('crypto').randomBytes(128).toString('hex'))" >> /opt/genieacs/genieacs.env
     chown genieacs:genieacs /opt/genieacs/genieacs.env
     chown genieacs. /opt/genieacs -R
     chmod 600 /opt/genieacs/genieacs.env
@@ -171,6 +173,15 @@ EOF
     dateext
 }
 EOF
+systemctl enable genieacs-cwmp
+systemctl start genieacs-cwmp
+systemctl enable genieacs-nbi
+systemctl start genieacs-nbi
+systemctl enable genieacs-fs
+systemctl start genieacs-fs
+systemctl enable genieacs-ui
+systemctl start genieacs-ui
+
     echo -e "${GREEN}========== Install APP GenieACS selesai... ==============${NC}"
     systemctl daemon-reload
     systemctl enable --now genieacs-{cwmp,fs,ui,nbi}
