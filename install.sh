@@ -46,7 +46,6 @@ apt-get install -y mongodb-org
 systemctl start mongod.service
 systemctl enable mongod
 
-mongo --eval 'db.runCommand({ connectionStatus: 1 })'
 ps --no-headers -o comm 1
 
 #GenieACS
